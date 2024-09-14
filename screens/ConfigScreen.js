@@ -1,60 +1,33 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { TextInput, Button, Text, useTheme } from 'react-native-paper';
+import { View } from 'react-native';
+import { TextInput, Button } from 'react-native-paper';
 
-const ConfigScreen = ({ navigation }) => {
-  const { colors } = useTheme();
-  const [workTime, setWorkTime] = useState('25');
-  const [restTime, setRestTime] = useState('5');
+export default function ConfigScreen({ navigation }) {
+  const [workTime, setWorkTime] = useState('25');  // Tempo de trabalho
+  const [breakTime, setBreakTime] = useState('5');  // Tempo de descanso
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Tempo de Trabalho (min):</Text>
+    <View style={{ flex: 1, justifyContent: 'center', padding: 20 }}>
       <TextInput
-        keyboardType="numeric"
+        label="Tempo de Trabalho (min)"
         value={workTime}
-        onChangeText={text => setWorkTime(text)}
-        style={styles.input}
-        mode="outlined"
-      />
-      <Text style={styles.label}>Tempo de Descanso (min):</Text>
-      <TextInput
         keyboardType="numeric"
-        value={restTime}
-        onChangeText={text => setRestTime(text)}
-        style={styles.input}
-        mode="outlined"
+        onChangeText={(text) => setWorkTime(text)}
+        style={{ marginBottom: 20 }}
+      />
+      <TextInput
+        label="Tempo de Descanso (min)"
+        value={breakTime}
+        keyboardType="numeric"
+        onChangeText={(text) => setBreakTime(text)}
+        style={{ marginBottom: 20 }}
       />
       <Button
         mode="contained"
-        onPress={() => navigation.navigate('Timer')}
-        style={styles.button}
+        onPress={() => navigation.navigate('Timer', { workTime: parseInt(workTime), breakTime: parseInt(breakTime) })}
       >
-        Salvar Configurações
+        Salvar
       </Button>
     </View>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-  },
-  label: {
-    fontSize: 16,
-    color: '#555',
-    marginBottom: 10,
-  },
-  input: {
-    marginBottom: 20,
-    backgroundColor: 'transparent',
-  },
-  button: {
-    marginTop: 20,
-  },
-});
-
-export default ConfigScreen;
+}

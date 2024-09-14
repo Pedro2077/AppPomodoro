@@ -6,18 +6,18 @@ import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 import TimerScreen from './screens/TimerScreen';
 import ConfigScreen from './screens/ConfigScreen';
 
-// Cria o stack navigator para navegação entre as telas
+
 const Stack = createStackNavigator();
 
-// Definição do tema customizado para o React Native Paper
+
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#6200ee',  // Cor principal para botões e destaques
-    accent: '#03dac4',   // Cor de acento
-    background: '#f8f9fa', // Cor de fundo para a aplicação
-    text: '#333',        // Cor padrão para o texto
+    primary: '#6200ee',  
+    accent: '#03dac4',   
+    background: '#f8f9fa', 
+    text: '#333',        
   },
 };
 

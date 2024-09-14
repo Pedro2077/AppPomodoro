@@ -1,78 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Button, Text, Title, useTheme } from 'react-native-paper';
+import { View, Text } from 'react-native';
+import { Button } from 'react-native-paper';
 
-const TimerScreen = ({ navigation }) => {
-  const { colors } = useTheme(); // Obtenha cores do tema
-  const [seconds, setSeconds] = useState(1500); // 25 minutos
+export default function TimerScreen({ navigation }) {
+  const [time, setTime] = useState(25 * 60);  // Tempo inicial em segundos (25 minutos)
   const [isRunning, setIsRunning] = useState(false);
 
+  // Atualiza o timer a cada segundo
   useEffect(() => {
-    let interval = null;
+    let interval;
     if (isRunning) {
       interval = setInterval(() => {
-        setSeconds(prev => (prev > 0 ? prev - 1 : 0));
+        setTime(prevTime => (prevTime > 0 ? prevTime - 1 : 0));
       }, 1000);
-    } else if (!isRunning && seconds !== 0) {
+    } else if (!isRunning && time !== 0) {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [isRunning, seconds]);
+  }, [isRunning, time]);
 
-  const formatTime = (secs) => {
-    const minutes = Math.floor(secs / 60);
-    const remainingSeconds = secs % 60;
-    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
   return (
-    <View style={styles.container}>
-      <Title style={{ color: colors.primary, marginBottom: 20 }}>Pomodoro Timer</Title>
-      <Text style={styles.timer}>{formatTime(seconds)}</Text>
-      <Button
-        mode={isRunning ? "contained" : "outlined"}
-        onPress={() => setIsRunning(!isRunning)}
-        style={styles.button}
-      >
-        {isRunning ? 'Pausar' : 'Iniciar'}
-      </Button>
-      <Button
-        mode="contained"
-        onPress={() => setSeconds(1500)}
-        style={[styles.button, { backgroundColor: colors.accent }]}
-      >
-        Redefinir
-      </Button>
-      <Button
-        mode="text"
-        onPress={() => navigation.navigate('Config')}
-        style={styles.button}
-        labelStyle={{ color: colors.accent }}
-      >
-        Configuração
-      </Button>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text style={{ fontSize: 48 }}>{formatTime(time)}</Text>
+      <View style={{ flexDirection: 'row', margin: 20 }}>
+        <Button mode="contained" onPress={() => setIsRunning(!isRunning)} style={{ marginRight: 10 }}>
+          {isRunning ? 'Pausar' : 'Iniciar'}
+        </Button>
+        <Button mode="contained" onPress={() => setTime(25 * 60)}>Resetar</Button>
+      </View>
+      <Button onPress={() => navigation.navigate('Config')}>Configurações</Button>
     </View>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#f8f9fa',
-  },
-  timer: {
-    fontSize: 64,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 30,
-  },
-  button: {
-    marginTop: 15,
-    width: 200,
-  },
-});
-
-export default TimerScreen;
+}
