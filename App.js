@@ -7,11 +7,20 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import TimerScreen from './screens/TimerScreen';
 import ConfigScreen from './screens/ConfigScreen';
 
-const Stack = createStackNavigator();
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#6200ee',  
+    accent: '#03dac4',   
+    background: '#f8f9fa', 
+    text: '#333',        
+  },
+};
 
 export default function App() {
   return (
-    <PaperProvider>
+    <PaperProvider theme={theme}>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Timer">
           <Stack.Screen name="Timer" component={TimerScreen} options={{ title: 'Pomodoro Timer' }} />
