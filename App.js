@@ -5,7 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 import TimerScreen from './screens/TimerScreen';
 import ConfigScreen from './screens/ConfigScreen';
-
+import './styles/styles.scss';
 
 const Stack = createStackNavigator();
 
