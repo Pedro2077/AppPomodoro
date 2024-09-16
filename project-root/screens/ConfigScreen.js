@@ -1,33 +1,51 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 
-export default function ConfigScreen({ navigation }) {
-  const [workTime, setWorkTime] = useState('25');  // Tempo de trabalho
-  const [breakTime, setBreakTime] = useState('5');  // Tempo de descanso
+const ConfigScreen = ({ navigation }) => {
+  const [workTime, setWorkTime] = useState('25');
+  const [breakTime, setBreakTime] = useState('5');
+
+  const saveConfig = () => {
+    // Aqui você pode passar os tempos configurados para o TimerScreen
+    // ou armazená-los em um contexto global ou estado de gerenciamento
+    navigation.navigate('Timer', { workTime: parseInt(workTime) * 60, breakTime: parseInt(breakTime) * 60 });
+  };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', padding: 20 }}>
+    <View style={styles.container}>
+      <Text>Tempo de Trabalho (minutos):</Text>
       <TextInput
-        label="Tempo de Trabalho (min)"
+        style={styles.input}
         value={workTime}
         keyboardType="numeric"
         onChangeText={(text) => setWorkTime(text)}
-        style={{ marginBottom: 20 }}
       />
+      <Text>Tempo de Descanso (minutos):</Text>
       <TextInput
-        label="Tempo de Descanso (min)"
+        style={styles.input}
         value={breakTime}
         keyboardType="numeric"
         onChangeText={(text) => setBreakTime(text)}
-        style={{ marginBottom: 20 }}
       />
-      <Button
-        mode="contained"
-        onPress={() => navigation.navigate('Timer', { workTime: parseInt(workTime), breakTime: parseInt(breakTime) })}
-      >
-        Salvar
-      </Button>
+      <Button title="Salvar" onPress={saveConfig} />
     </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  input: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+  },
+});
+
+export default ConfigScreen;

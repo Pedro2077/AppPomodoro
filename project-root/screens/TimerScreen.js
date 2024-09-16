@@ -1,40 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
-import { Button } from 'react-native-paper';
+import { View, Text, Button, StyleSheet } from 'react-native';
+import { formatTime } from '../utils/timeUtils'; // função utilitária para formatar o tempo
 
-export default function TimerScreen({ navigation }) {
-  const [time, setTime] = useState(25 * 60);  // Tempo inicial em segundos (25 minutos)
+const TimerScreen = () => {
   const [isRunning, setIsRunning] = useState(false);
+  const [currentTime, setCurrentTime] = useState(25 * 60); // Tempo inicial: 25 minutos
+  const [intervalId, setIntervalId] = useState(null);
 
-  // Atualiza o timer a cada segundo
-  useEffect(() => {
-    let interval;
+  // Função para iniciar e pausar o timer
+  const toggleTimer = () => {
     if (isRunning) {
-      interval = setInterval(() => {
-        setTime(prevTime => (prevTime > 0 ? prevTime - 1 : 0));
+      clearInterval(intervalId);
+    } else {
+      const id = setInterval(() => {
+        setCurrentTime((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
       }, 1000);
-    } else if (!isRunning && time !== 0) {
-      clearInterval(interval);
+      setIntervalId(id);
     }
-    return () => clearInterval(interval);
-  }, [isRunning, time]);
-
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+    setIsRunning(!isRunning);
   };
 
+  // Função para resetar o timer
+  const resetTimer = () => {
+    clearInterval(intervalId);
+    setIsRunning(false);
+    setCurrentTime(25 * 60); // Reseta para 25 minutos
+  };
+
+  useEffect(() => {
+    if (currentTime === 0) {
+      clearInterval(intervalId);
+      setIsRunning(false);
+    }
+    return () => clearInterval(intervalId);
+  }, [currentTime]);
+
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 48 }}>{formatTime(time)}</Text>
-      <View style={{ flexDirection: 'row', margin: 20 }}>
-        <Button mode="contained" onPress={() => setIsRunning(!isRunning)} style={{ marginRight: 10 }}>
-          {isRunning ? 'Pausar' : 'Iniciar'}
-        </Button>
-        <Button mode="contained" onPress={() => setTime(25 * 60)}>Resetar</Button>
-      </View>
-      <Button onPress={() => navigation.navigate('Config')}>Configurações</Button>
+    <View style={styles.container}>
+      <Text style={styles.timerText}>{formatTime(currentTime)}</Text>
+      <Button title={isRunning ? 'Pausar' : 'Iniciar'} onPress={toggleTimer} />
+      <Button title="Resetar" onPress={resetTimer} />
     </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f8f9fa',
+  },
+  timerText: {
+    fontSize: 48,
+    marginBottom: 20,
+  },
+});
+
+export default TimerScreen;
